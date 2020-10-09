@@ -1,0 +1,8 @@
+_extends: .github
+repository:
+  name: modules-talk
+  description: >-
+    This is the repo for the talk I will give/gave for the dsmJS user group
+    during the November 2020 meeting.
+  homepage: 'https://github.com/trevtrich/modules-talk#readme'
+  private: false
