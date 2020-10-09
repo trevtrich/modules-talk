@@ -10,6 +10,7 @@ export default function (env) {
       path: resolve(__dirname, 'lib', 'server'),
       libraryTarget: 'commonjs2'
     },
-    target: 'node'
+    target: 'node',
+    externals: ['@hapi/good', '@hapi/glue']
   };
 }
