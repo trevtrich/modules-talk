@@ -1,4 +1,5 @@
 import bunyan from 'bunyan';
+import path from 'path';
 
 require('dotenv-safe').config();
 
@@ -7,7 +8,10 @@ const logger = bunyan.createLogger({
 });
 
 export default {
-  server: {port: process.env.PORT, routes: {security: true}},
+  server: {
+    port: process.env.PORT,
+    routes: {security: true, files: {relativeTo: path.join(__dirname, 'public')}}
+  },
   register: {
     plugins: [
       {
@@ -35,7 +39,9 @@ export default {
             ]
           }
         }
-      }
+      },
+      {plugin: require('@hapi/inert')},
+      {plugin: require('./inert-routes')}
     ]
   }
 };
