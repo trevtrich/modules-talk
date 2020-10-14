@@ -16,7 +16,7 @@
     "lint:sensitive": "ban",
     "lint:travis": "travis-lint .travis.yml",
     "clean": "rimraf ./lib",
-    "dev:server:watch": "nodemon --watch lib ./lib/server",
+    "dev:server:watch": "nodemon ./src/server/index.js",
     "dev:server": "npm-run-all build dev:server:watch",
     "dev": "run-s dev:server",
     "start": "node ./lib/server",
@@ -40,6 +40,7 @@
     "hapi-graceful-shutdown-plugin": "2.0.8"
   },
   "devDependencies": {
+    "@babel/node": "7.10.5",
     "@babel/register": "7.11.5",
     "@form8ion/babel-preset": "1.6.32",
     "@form8ion/commitlint-config": "1.0.14",
