@@ -1,0 +1,228 @@
+import {themes} from 'mdx-deck';
+import {atomDark} from 'react-syntax-highlighter/dist/esm/styles/prism'
+import {Prism} from 'react-syntax-highlighter'
+import KeyPoints from './key-points';
+
+export const CodeBlock = props => {
+  return <Prism language="javascript" style={atomDark} {...props} />
+}
+
+export const theme = {
+  ...themes.prism,
+  components: {
+    code: CodeBlock
+  }
+}
+
+# ES Modules - Things to Consider
+## Trev Richardson for dsmJS 11/2020 meeting
+
+---
+
+## What's a module?
+
+```
+// file1.js
+function blah() {}
+
+// file2.js
+blah();
+```
+
+---
+
+## State of the World
+
+Common.js
+
+```
+// file1.js
+exports.foo = 'bar';
+
+// file2.js
+const foo = require('file1').foo;`
+```
+
+ES Modules
+
+```
+// file1.js
+export const foo = 'bar';
+
+// file2.js
+import {foo} from 'file1.js';`
+```
+
+---
+
+## Common.js
+
+import commonJsRequireFlowImage from './cjs-require.png';
+
+<KeyPoints>
+
+- Built for Node.js
+- Module resolution on the file system
+- Very common for libraries
+- No browser support(ish)! Only Node.js
+
+</KeyPoints>
+
+<figure>
+<img src={commonJsRequireFlowImage} style={{marginTop: 20, width: 500, height: 298, backgroundColor: 'white'}} />
+<figcaption style={{fontSize: 14}}>Lin Clark - https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive</figcaption>
+</figure>
+
+---
+
+import asyncDeferImage from './async-defer.svg';
+
+## E(cma)S(cript) Modules
+
+<KeyPoints>
+Native module support in the browser (without a bundler 🎉)
+</KeyPoints>
+
+```
+<script type="module" src="./blah.js" />
+```
+
+---
+
+## But how are they used (in the browser)?
+
+<KeyPoints>
+
+ES Modules: full support, but not all that common.
+
+Common.js: create a big ‘ol bundle. Still better than _not_ using modules.
+
+</KeyPoints>
+
+```
+// file1.js
+export function func1() {}
+
+// file2.js
+export function func2() {}
+
+// file3.js
+export function func3() {}
+
+// app.js
+function func1() {}
+function func2() {}
+function func3() {}
+```
+
+---
+
+## ES Modules in the Browser
+
+🎉 Demo Time 🎉
+
+also show "nomodule"
+
+<figure>
+<img src={asyncDeferImage} style={{marginTop: 20, width: 800, height: 200, backgroundColor: 'white'}} />
+<figcaption style={{fontSize: 14}}>https://v8.dev/features/modules#defer</figcaption>
+</figure>
+
+---
+
+## What has changed that's important now?
+
+<KeyPoints>
+Well.. es modules now work in the browser…
+
+Node.js supports ES Modules natively now, so don’t have to use different things in node vs. browser (sometimes)
+Although, actually Node lets you get away with a bunch of stuff that browser won’t.
+
+http/2 & server push (sort of - hard in practice)
+
+Export maps
+</KeyPoints>
+
+---
+
+## Server Push & Script Pre-load
+
+🎉 Demo Time 🎉
+
+---
+
+## Module resolution algorithm
+
+<KeyPoints>
+
+1. Fetch any imports/exports
+2. Match imports & exports
+3. Execute code
+
+</KeyPoints>
+
+---
+
+import modulesMainThreadRender from './renderer-main-thread-time-breakdown.svg';
+
+## So I _can_ use them. Should I?
+
+<KeyPoints>
+
+- < 100 modules
+- < 5 levels deep
+- returning visitors (caching FTW)
+- during development
+
+</KeyPoints>
+
+<figure>
+<img src={modulesMainThreadRender} style={{marginTop: 20, width: 800, height: 200, backgroundColor: 'white'}} />
+<figcaption style={{fontSize: 14}}>https://v8.dev/features/modules#performance</figcaption>
+</figure>
+
+---
+
+## Importing Lodash
+
+🎉 Demo Time 🎉
+
+---
+
+## Recommendations
+
+<KeyPoints>
+(As they say) it depends 😄
+
+What does your module depth/complexity look like?
+
+Do you support older browsers?
+
+Tooling support exporting esm for internal libraries?
+
+If you’re not using modules for development.. You should strongly consider for treeshaking purposes if you use Webpack.
+
+Maybe just for Dev? Snowpack https://www.snowpack.dev/
+
+Takes care of things like common.js libraries (react or similar). Transpile once and expose as es module and done.
+</KeyPoints>
+
+---
+
+## What about publishing libraries?
+
+Future talk! 😎
+---
+
+## Browser Modules vs. Node.js Modules
+
+🎉 Demo Time 🎉
+
+---
+
+## References
+
+- https://tc39.es/ecma262/#sec-modules
+- https://v8.dev/features/modules
+- https://www.snowpack.dev/
+- https://hacks.mozilla.org/2015/08/es6-in-depth-modules/

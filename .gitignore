@@ -5,3 +5,6 @@
 
 .eslintcache
 .env
+
+src/server/localhost.crt
+src/server/localhost.key

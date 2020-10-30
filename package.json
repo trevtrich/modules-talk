@@ -21,6 +21,7 @@
     "dev": "run-s dev:server",
     "start": "node ./lib/server",
     "prebuild": "run-s clean",
+    "copy:cert": "cpy 'localhost.key' 'localhost.crt' '../../lib/server' --cwd=src/server/",
     "copy:public": "cpy 'public' '../../lib/server' --parents --cwd=src/server/",
     "build": "npm-run-all --print-label --parallel build:* --parallel copy:*",
     "build:server": "webpack --env production --config webpack.config.server.babel.js",
@@ -37,7 +38,9 @@
     "bunyan": "1.8.14",
     "dotenv-safe": "8.2.0",
     "good-bunyan": "3.0.1",
-    "hapi-graceful-shutdown-plugin": "2.0.8"
+    "hapi-graceful-shutdown-plugin": "2.0.8",
+    "lodash.merge": "4.6.2",
+    "underdog": "4.1.0"
   },
   "devDependencies": {
     "@babel/node": "7.10.5",

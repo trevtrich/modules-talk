@@ -1,5 +1,12 @@
 import bunyan from 'bunyan';
 import path from 'path';
+import http2 from 'http2';
+import fs from 'fs';
+
+const listener = http2.createSecureServer({
+  key: fs.readFileSync(__dirname + '/localhost.key'),
+  cert: fs.readFileSync(__dirname + '/localhost.crt')
+});
 
 require('dotenv-safe').config();
 
@@ -10,7 +17,9 @@ const logger = bunyan.createLogger({
 export default {
   server: {
     port: process.env.PORT,
-    routes: {security: true, files: {relativeTo: path.join(__dirname, 'public')}}
+    routes: {security: true, files: {relativeTo: path.join(__dirname, 'public')}},
+    tls: true,
+    listener
   },
   register: {
     plugins: [
@@ -40,6 +49,7 @@ export default {
           }
         }
       },
+      {plugin: require('underdog')},
       {plugin: require('@hapi/inert')},
       {plugin: require('./inert-routes')}
     ]
