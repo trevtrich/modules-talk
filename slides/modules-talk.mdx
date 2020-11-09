@@ -1,7 +1,6 @@
-import {themes} from 'mdx-deck';
+import {themes, Steps} from 'mdx-deck';
 import {atomDark} from 'react-syntax-highlighter/dist/esm/styles/prism'
 import {Prism} from 'react-syntax-highlighter'
-import KeyPoints from './key-points';
 
 export const CodeBlock = props => {
   return <Prism language="javascript" style={atomDark} {...props} />
@@ -11,11 +10,23 @@ export const theme = {
   ...themes.prism,
   components: {
     code: CodeBlock
+  },
+  styles: {
+    ul: {margin: '20px auto', maxWidth: "80%"},
+    li: {paddingBottom: 15, width: 'fit-content'},
+    p: {margin: 0},
+    code: {fontSize: 24}
   }
 }
 
 # ES Modules - Things to Consider
 ## Trev Richardson for dsmJS 11/2020 meeting
+
+---
+
+## I'm not an expert!
+
+Heard about Node.js support and decided to dive in.
 
 ---
 
@@ -59,17 +70,13 @@ import {foo} from 'file1.js';`
 
 import commonJsRequireFlowImage from './cjs-require.png';
 
-<KeyPoints>
-
 - Built for Node.js
 - Module resolution on the file system
-- Very common for libraries
 - No browser support(ish)! Only Node.js
-
-</KeyPoints>
+- Very common for libraries
 
 <figure>
-<img src={commonJsRequireFlowImage} style={{marginTop: 20, width: 500, height: 298, backgroundColor: 'white'}} />
+<img src={commonJsRequireFlowImage} style={{marginTop: 20, width: 500, height: 300, backgroundColor: 'white'}} />
 <figcaption style={{fontSize: 14}}>Lin Clark - https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive</figcaption>
 </figure>
 
@@ -79,25 +86,33 @@ import asyncDeferImage from './async-defer.svg';
 
 ## E(cma)S(cript) Modules
 
-<KeyPoints>
-Native module support in the browser (without a bundler 🎉)
-</KeyPoints>
+- Native module support in the browser (without a bundler 🎉)
 
 ```
 <script type="module" src="./blah.js" />
 ```
 
+1. Fetch and parse any imports/exports
+2. Match imports & exports
+3. Execute code
+
+<figure>
+<img src="https://hacks.mozilla.org/files/2018/03/10_construction-500x302.png" style={{marginTop: 20, width: 500, height: 300, backgroundColor: 'white'}} />
+<figcaption style={{fontSize: 14}}>Lin Clark - https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive</figcaption>
+</figure>
+
+---
+
+## ES Modules in the Browser
+
+🎉 Demo Time 🎉
+
 ---
 
 ## But how are they used (in the browser)?
 
-<KeyPoints>
-
-ES Modules: full support, but not all that common.
-
-Common.js: create a big ‘ol bundle. Still better than _not_ using modules.
-
-</KeyPoints>
+- ES Modules: full support, but not all that common.
+- Common.js: create a big ‘ol bundle. Still better than _not_ using modules.
 
 ```
 // file1.js
@@ -106,60 +121,50 @@ export function func1() {}
 // file2.js
 export function func2() {}
 
-// file3.js
-export function func3() {}
-
 // app.js
 function func1() {}
 function func2() {}
-function func3() {}
 ```
-
----
-
-## ES Modules in the Browser
-
-🎉 Demo Time 🎉
-
-also show "nomodule"
-
-<figure>
-<img src={asyncDeferImage} style={{marginTop: 20, width: 800, height: 200, backgroundColor: 'white'}} />
-<figcaption style={{fontSize: 14}}>https://v8.dev/features/modules#defer</figcaption>
-</figure>
 
 ---
 
 ## What has changed that's important now?
 
-<KeyPoints>
-Well.. es modules now work in the browser…
+<Steps>
 
-Node.js supports ES Modules natively now, so don’t have to use different things in node vs. browser (sometimes)
-Although, actually Node lets you get away with a bunch of stuff that browser won’t.
+- 🎉 Browser support
+- Node.js support
+- http/2
+- (some) bundlers can now export native modules
+- `<link rel="modulepreload" />`
+- `<script type="importmap" />`
+  ```
+  <script type="importmap">
+    {
+      "imports": {
+        "lodash": "/node_modules/lodash-es/lodash.js"
+      }
+    }
+  </script>
 
-http/2 & server push (sort of - hard in practice)
+  <script type="module">
+    import 'lodash';
+  </script>
+  ```
 
-Export maps
-</KeyPoints>
+</Steps>
 
 ---
 
-## Server Push & Script Pre-load
+## Server Push
 
 🎉 Demo Time 🎉
 
 ---
 
-## Module resolution algorithm
+## Modules #AllTheThings
 
-<KeyPoints>
-
-1. Fetch any imports/exports
-2. Match imports & exports
-3. Execute code
-
-</KeyPoints>
+<img src="https://i.imgflip.com/4kx3ia.jpg" title="made at imgflip.com" style={{width: 800, height: 800}}/>
 
 ---
 
@@ -167,17 +172,12 @@ import modulesMainThreadRender from './renderer-main-thread-time-breakdown.svg';
 
 ## So I _can_ use them. Should I?
 
-<KeyPoints>
-
-- < 100 modules
-- < 5 levels deep
-- returning visitors (caching FTW)
-- during development
-
-</KeyPoints>
+- `if < 100 modules && < 5 levels deep`
+- Return visitors? Caching #ForTheWin
+- Libraries🤦‍♂️
 
 <figure>
-<img src={modulesMainThreadRender} style={{marginTop: 20, width: 800, height: 200, backgroundColor: 'white'}} />
+<img src={modulesMainThreadRender} style={{marginTop: 20, width: 1600, height: 400, backgroundColor: 'white'}} />
 <figcaption style={{fontSize: 14}}>https://v8.dev/features/modules#performance</figcaption>
 </figure>
 
@@ -189,34 +189,25 @@ import modulesMainThreadRender from './renderer-main-thread-time-breakdown.svg';
 
 ---
 
-## Recommendations
+## Recommendations: (As they say) it depends 😄
 
-<KeyPoints>
-(As they say) it depends 😄
+<Steps>
 
-What does your module depth/complexity look like?
+- Use them for development. Your tree shaken bundle users will (maybe) thank you
+- Small site? Start with it and keep track of performance as you grow
+- Big site? Bundle, but export deps as modules
+- Need to support older browsers? Use `nomodule`
+- Tooling support exporting esm for internal libraries?
+- Maybe just for dev? Snowpack
+  - Bundle deps once.. at install time
 
-Do you support older browsers?
-
-Tooling support exporting esm for internal libraries?
-
-If you’re not using modules for development.. You should strongly consider for treeshaking purposes if you use Webpack.
-
-Maybe just for Dev? Snowpack https://www.snowpack.dev/
-
-Takes care of things like common.js libraries (react or similar). Transpile once and expose as es module and done.
-</KeyPoints>
+</Steps>
 
 ---
 
 ## What about publishing libraries?
 
 Future talk! 😎
----
-
-## Browser Modules vs. Node.js Modules
-
-🎉 Demo Time 🎉
 
 ---
 
@@ -226,3 +217,4 @@ Future talk! 😎
 - https://v8.dev/features/modules
 - https://www.snowpack.dev/
 - https://hacks.mozilla.org/2015/08/es6-in-depth-modules/
+- https://philipwalton.com/articles/using-native-javascript-modules-in-production-today
