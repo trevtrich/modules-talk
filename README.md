@@ -27,6 +27,18 @@ the November 2020 meeting.
 
 <!--consumer-badges end -->
 
+In order to run the Hapi.js server based on a raw Node.js http/2 server, you'll
+have to create your own self-signed cert files.  You can do this with the
+directions found
+[here](https://devcenter.heroku.com/articles/ssl-certificate-self). Once you've
+created the files drop them into:
+
+* src/server/localhost.crt
+* src/server/localhost.key
+
+These are currently ignored in VCS, as this would be a bad idea to deploying
+your true app certs this way.
+
 ### Build the Bundle
 
 ```sh
