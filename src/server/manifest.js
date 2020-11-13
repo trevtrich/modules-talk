@@ -4,8 +4,8 @@ import http2 from 'http2';
 import fs from 'fs';
 
 const listener = http2.createSecureServer({
-  key: fs.readFileSync(__dirname + '/localhost.key'),
-  cert: fs.readFileSync(__dirname + '/localhost.crt')
+  key: fs.readFileSync(path.join(__dirname, '/localhost.key')),
+  cert: fs.readFileSync(path.join(__dirname, '/localhost.crt'))
 });
 
 require('dotenv-safe').config();

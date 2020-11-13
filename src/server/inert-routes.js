@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 
 export const plugin = {
   name: 'inert-route-setup-plugin',
@@ -20,8 +21,7 @@ export const plugin = {
       method: 'GET',
       path: '/server-push',
       handler: (request, h) => {
-        console.log('-- were in here!');
-        const response = h.response(fs.readFileSync(__dirname + '/public/home.html'));
+        const response = h.response(fs.readFileSync(path.join(__dirname, '/public/home.html')));
         response.type('text/html');
 
         h.push(response, 'esm-1.js');
